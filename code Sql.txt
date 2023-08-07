@@ -1,0 +1,424 @@
+
+ 
+انشاء مستخدم واعطاءه صلاحيات
+ 
+conn 
+/as sysdba
+create user naadaa identified by naadaa;
+grant create session to naadaa;
+grant create table to naadaa;
+ grant dba to naadaa;
+ alter user naadaa quota 150m on system;
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+انشاء جداول + اعطاء قيود (DDL)
+
+create table jobs(
+    job_id number(5) constraint job_job_id_pk primary key ,
+    job_name varchar2(50) not null);
+-------------------------------------------------------
+ create table employees(
+     emp_id number(5),
+        first_name varchar2(50) not null,
+        last_name varchar2(50) not null,
+        date_of_birth date ,
+        address varchar2(50) not null,
+        hier_date date default sysdate,
+        salary number(30),
+        commission_pct number(30),
+       phone_number number(10) unique,
+       job_id number(5),
+      constraint emp_emp_id_pk primary key(emp_id),
+     constraint emp_job_job_id_fk foreign key(job_id) references jobs(job_id) on delete set null);
+----------------------------------------------
+create table studants(
+      st_id number(8),
+      first_name varchar2(50) not null,
+        second_name varchar2(50) not null,
+        third_name varchar2(50) not null,
+       last_name varchar2(50) not null,
+        date_of_birth date ,
+       address varchar2(50) not null,
+     year_of_joining number ,
+       phone_number number(10) unique,
+       general_avg  number(5) not null,
+      gender  varchar2(10) not null,
+     constraint student_st_id_pk  primary key(st_id));
+
+--------------------------------------------------------------
+create table subjects(
+sub_id number(10) constraint subject_sub_id_pk primary key,
+sub_name varchar(50) not null,
+course_pric_per_month number(30) ); 
+---------------------------------
+create table divisions (
+div_id  number(10),
+academic_year number(10),
+sub_id number(10),
+emp_id number(5),
+div_day varchar2(10) ,
+div_time  timestamp  ,
+  constraint div_div_id_pk primary key(div_id),
+  constraint div_sub_sub_id_fk foreign key(sub_id) references subjects(sub_id) on delete set null,
+ constraint div_emp_emp_id_fk foreign key(emp_id) references employees(emp_id) on delete set null);
+
+---------------------------------------------------------
+create table divisions_studants (
+   div_id  number(10),
+    st_id number(8),
+    grade number(3),
+    constraint div_st_div_id_st_id_pk primary key(div_id,st_id)) ;
+------------------------------
+create table quizzes (
+quiz_id number(10) ,
+div_id  number(10),
+academic_year number(10),
+quiz_day varchar2(10) ,
+quiz_date date ,
+quiz_time  timestamp  ,
+constraint quiz_quiz_id_pk primary key(quiz_id),
+constraint quiz_div_div_id_fk foreign key(div_id) references divisions (div_id) on delete set null);
+-------------------------------------
+create table paymants_bills(
+paymant_bill_id number(10),
+st_id number(8),
+amount_to_be_paid number(15),
+cash_payment number(15),
+remainning_amount number(15),
+paymant_time  timestamp ,
+paymant_date date default sysdate,
+constraint paymant_paymant_bill_id_pk primary key(paymant_bill_id),
+ constraint paymant_st_st_id_fk foreign key(st_id ) references studants(st_id ) on delete set null);
+
+-------------------------------------------------------------------------------------------------------------------------
+commit;
+-----------------------------------------------
+(DML)
+...............
+ insert into jobs (job_id , job_name) 
+values (1, ' manager') ;
+
+ insert into jobs (job_id , job_name) 
+values (2, ' Deputy manager') ;
+
+ insert into jobs (job_id , job_name) 
+values (3, ' dustman') ; 
+
+insert into jobs (job_id , job_name) 
+values (4, ' accountant') ;
+
+ insert into jobs (job_id , job_name) 
+values (5, 'secretary ') ;
+
+ insert into jobs (job_id , job_name) 
+values (6, 'Arabic teacher ') ;
+
+ insert into jobs (job_id , job_name) 
+values (7, ' Mathematics Teacher') ;
+
+ insert into jobs (job_id , job_name) 
+values (8, ' science teacher ') ;
+
+ insert into jobs (job_id , job_name) 
+values (9, ' English teacher ') ;
+
+insert into jobs (job_id , job_name) 
+values (10, ' religion teacher ') ;
+
+
+insert into jobs (job_id , job_name) 
+values (11, ' social studies teacher ') ;
+
+insert into jobs (job_id , job_name) 
+values (12, ' Physics teacher ') ;
+
+insert into jobs (job_id , job_name) 
+values (13, ' Chemistry teacher') ;
+
+insert into jobs (job_id , job_name) 
+values (14, ' biology  teacher ') ;
+
+insert into jobs (job_id , job_name) 
+values (15, 'technology teacher') ;
+................................................................................................
+
+insert into employees (EMP_ID,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH,ADDRESS,SALARY,PHONE_NUMBER,JOB_ID)
+values (1 ,  'mohamed' , 'maner ' , '29-JUN-96 ',  'qaza' , 3000 , 0597710224 ,1 );
+
+
+insert into employees (EMP_ID,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH,ADDRESS,SALARY,PHONE_NUMBER,JOB_ID)
+values (2 ,  'hadi' , 'rajeb ' , '21-JUN-00 ',  'rafah' , 2800 , 0597712222 ,4 );
+
+insert into employees (EMP_ID,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH,ADDRESS,SALARY,PHONE_NUMBER,JOB_ID)
+values (3 ,  'nael' , 'aboras ' , '10-JUN-93 ',  'qaza' , 2000, 0597710225 ,9 );
+
+
+insert into employees (EMP_ID,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH,ADDRESS,SALARY,PHONE_NUMBER,JOB_ID)
+values (4 ,  'nada' , 'abofares ' , '4-JUN-02 ',  'KHANYOUNIS' , 2500 , 0593274606 ,4 );
+
+insert into employees (EMP_ID,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH,ADDRESS,SALARY,PHONE_NUMBER,JOB_ID)
+values (5 ,  'fatmaa' , 'aziz ' , '29-JUN-96 ',  'qaza' , 2300 , 0597710255 ,12 );
+
+insert into employees (EMP_ID,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH,ADDRESS,SALARY,PHONE_NUMBER,JOB_ID)
+values (6 ,  'mohamed' , 'atya ' , '11-JUN-99 ',  'qaza' , 3000 , 0597222224 ,7 );
+
+insert into employees (EMP_ID,FIRST_NAME,LAST_NAME,DATE_OF_BIRTH,ADDRESS,SALARY,PHONE_NUMBER,JOB_ID)
+values (7 ,  'yaser' , 'atya ' , '22-JUN-90 ',  'qaza' , 3000 , 0597227224 ,7 );
+
+.........................................................................................................
+
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (01 ,'  Arabic ' ,     20     );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (02,' Mathematics' ,     25   );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (03 ,'  science' ,     25  );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (04 ,'  English ' ,     20     );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (05 ,'  religion' ,     15    );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (06 ,'   social studies ' ,    15     );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (07 ,'  Physics  ' ,     25     );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (08 ,' Chemistry' ,     25   );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (09 ,' biology' ,     25    );
+
+insert into subjects (sub_id ,sub_name,course_pric_per_month)
+values (10 ,' technology' ,     15  );
+..........................................................................
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values ( 1 , 'aya'  ,  'alaa' ,  'ahmed' , 'zian' ,  '04-JUN-02' , 'qaza' , 2019  ,  0599710113 , 78,'female'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values ( 2 , 'nada'  ,  'mohamed' ,  'mhamoud' , 'jarghoun' ,  '23-JUN-02' , 'khnyounis' , 2019,  0593257834 , 95,'female'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values ( 3 , 'ali'  ,  'mohamed' ,  'mhamoud' , 'alribay' ,  '12-JUN-00' , 'khnyounis' , 2019,  0593253334 , 95,'male'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values (4 , 'nada'  ,  'mohamed' ,  'ahmed' , 'jarghoun' ,  '04-JUN-02' , 'khnyounis' , 2020  ,  0593274606 , 95,'female'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values ( 5, 'atya'  ,  'mohamed' ,  'ali' , 'aouda' ,  '12-JUN-00' , 'khnyounis' , 2020  ,  0593274666 , 88,'male'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values ( 6 , 'maha'  ,  'ziad' ,  'ahmed' , 'jarghoun' ,  '04-JUN-00' , 'khnyounis' , 2020  ,  0593245696 ,93,'female'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values ( 7 , 'hala'  ,  'ziad' ,  'ahmed' , 'alnajer' ,  '30-JUN-01' , 'rafah' , 2021  ,  0593274996 ,99,'female'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values (8 , 'anje'  ,  'ali' ,  'mansour' , 'alqdem' ,  '20-JUN-00' , 'khnyounis' , 2021 ,  0593971256,93,'female'  );
+
+insert into studants (  st_id,first_name, second_name, third_name, last_name,  date_of_birth, address,  year_of_joining , phone_number , general_avg , gender )
+values (9 , 'mhamoud'  ,  'ramzi' ,  'ali' , 'alnablsia' ,  '20-JUN-02' , 'alnserat' , 2021 ,  0599999256,93,'male'  );
+.....................................................................................................................
+
+insert into divisions (div_id ,academic_year,sub_id ,div_day ,div_time)
+values(100,2019 ,09 ,  'Tuesday ', TO_DATE('12:00:00' ,'hh24:mi:ss' ) );
+
+insert into divisions (div_id ,academic_year,sub_id ,emp_id,div_day ,div_time)
+values(101,2020 ,02,  'Tuesday  ', TO_DATE('12:00:00' ,'hh24:mi:ss' ) );
+
+insert into divisions (div_id ,academic_year,sub_id ,div_day ,div_time)
+values(102,2020 ,05,  'Monday  ', TO_DATE('11:00:00' ,'hh24:mi:ss' ) );
+
+insert into divisions (div_id ,academic_year,sub_id ,div_day ,div_time)
+values(103,2020 ,06, 'Saturday  ', TO_DATE('12:00:00' ,'hh24:mi:ss' ) );
+
+insert into divisions (div_id ,academic_year,sub_id ,div_day ,div_time)
+values(104,2020 ,04, 'Tuesday  ', TO_DATE('10:00:00' ,'hh24:mi:ss' ) );
+
+insert into divisions (div_id ,academic_year,sub_id ,div_day ,div_time)
+values(105,2021 , 04, 'monday  ', TO_DATE('11:00:00' ,'hh24:mi:ss' ) );
+
+
+.................................................................
+
+ insert into  divisions_studants(  div_id ,  st_id,   grade )
+values (  100 , 1 , 98    );
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  101 , 4 , 92   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  101 , 2 , 87  );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  102 ,4, 96   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  102 , 6 , 97   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  102, 5 , 78   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  103,  4 , 99   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  103, 6 , 89   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  104 , 5 ,77   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  104 , 6 , 98   );
+
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  105, 7 , 98   );
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  105, 8 , 78   );
+
+insert into divisions_studants (  div_id ,  st_id,   grade  ) 
+values (  105,   9 , 67   );
+
+.........................................................
+
+insert into quizzes(quiz_id ,div_id ,academic_year ,quiz_day,quiz_date ,quiz_time)
+values (1 ,100, 2019 ,'Tuesday ', '12-JUN-19',TO_DATE('11:00:00' ,'hh24:mi:ss' ));
+
+insert into quizzes(quiz_id ,div_id ,academic_year ,quiz_day,quiz_date ,quiz_time)
+values (2 ,100, 2019 ,'monday', '30-JUN-19',TO_DATE('10:00:00' ,'hh24:mi:ss' ));
+
+insert into quizzes(quiz_id ,div_id ,academic_year ,quiz_day,quiz_date ,quiz_time)
+values (3 ,101, 2020 ,'monday', '16-JUN-20',TO_DATE('10:00:00' ,'hh24:mi:ss' ));
+
+insert into quizzes(quiz_id ,div_id ,academic_year ,quiz_day,quiz_date ,quiz_time)
+values (4 ,101, 2020 ,'monday', '30-MAR-20',TO_DATE('11:00:00' ,'hh24:mi:ss' ));
+
+insert into quizzes(quiz_id ,div_id ,academic_year ,quiz_day,quiz_date ,quiz_time)
+values (5 ,102, 2020 ,'monday', '19-MAU-20',TO_DATE('1:00:00' ,'hh24:mi:ss' ));
+
+insert into quizzes(quiz_id ,div_id ,academic_year ,quiz_day,quiz_date ,quiz_time)
+values (6,102, 2020 ,'Saturday', '30-MAR-20',TO_DATE('9:00:00' ,'hh24:mi:ss' ));
+
+insert into quizzes(quiz_id ,div_id ,academic_year )
+values (7,103, 2020 );
+
+insert into quizzes(quiz_id ,div_id ,academic_year )
+values (8 ,104, 2020 );
+
+
+..........................................................
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  1 , 1 , 25 ,  20 , 5  ,TO_DATE('1:35:45' ,'hh24:mi:ss' ) );
+
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  2, 2 , 25 ,  25 ,0  ,TO_DATE('12:55:05' ,'hh24:mi:ss' ) );
+
+
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  3 , 4 , 55 ,  20 , 35  ,TO_DATE('7:24:00' ,'hh24:mi:ss' ) );
+
+
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  4, 5 , 35 ,  35, 0  ,TO_DATE('1:35:45' ,'hh24:mi:ss' ) );
+
+
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  5 , 6 , 50 ,  20 , 30  ,TO_DATE('2:22:07' ,'hh24:mi:ss' ) );
+
+
+
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  6, 7 , 20 ,  20 , 00  ,TO_DATE('4:14:51' ,'hh24:mi:ss' ) );
+
+
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  7 , 8 , 20 ,  20, 00  ,TO_DATE('1:31:28' ,'hh24:mi:ss' ) );
+
+
+ insert into paymants_bills ( paymant_bill_id , st_id  ,  amount_to_be_paid , cash_payment , remainning_amount,paymant_time )
+values(  8 , 9 , 20,  22 , 3  ,TO_DATE('11:26:42' ,'hh24:mi:ss' ) );
+
+....................................................
+commit;
+exit;
+.........................................................................................................................................................
+select statmants:
+
+ select count (st_id)
+  from studants;
+---------
+select first_name,last_name,gender
+    from studants
+    where gender ='male';
+---------
+ select first_name,last_name,gender,address
+    from studants
+    where gender ='female'and address= 'qaza';
+---------
+select sub_id,sub_name
+     from subjects;
+--------
+ select div_id, sub_id from divisions;
+--------
+select count(st_id) from divisions_studants
+  where div_id=102;
+----------
+select first_name, last_name,address,phone_number from studants natural join divisions_studants
+   where div_id=100;
+----------
+ select * from employees where emp_id =5;
+----------
+ select s.first_name , last_name , sub_name
+   from studants s ,subjects sub , divisions div ,divisions_studants divst
+   where s.st_id= divst.st_id and sub.sub_id=div.sub_id ;
+---------------
+select s.first_name , last_name , sub_name
+    from studants s ,subjects sub , divisions div ,divisions_studants divst
+  where s.st_id= divst.st_id and sub.sub_id=div.sub_id and s.st_id=2 ;
+------------------
+select quiz_id ,div_id
+    from quizzes
+    where div_id = 100;
+--------------
+select quiz_id ,div_id
+  from quizzes
+   where academic_year =2020;
+----------------
+select count(quiz_id)
+    from quizzes
+    where div_id = 100;
+--------------
+select emp_id , first_name , salary
+       from employees
+    where salary>=2000;
+-------------------
+elect  first_name, last_name
+       from employees
+       where address='rafah';
+----------------------------
+select div_id , div_day , div_time
+    from divisions;
+---------------------
+select div_id , div_day , div_time
+   from divisions
+   where academic_year =2020;
+------------------
+update employees
+   set phone_number=0598302243
+    where emp_id=1;

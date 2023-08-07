@@ -1,0 +1,85 @@
+create or replace FUNCTION serch_employee_name
+(emp_iid NUMBER)
+RETURN VARCHAR2
+is 
+v_fname VARCHAR2(30);
+
+begin 
+
+SELECT  FIRST_NAME  into v_fname
+from employees 
+where emp_id = emp_iid;
+RETURN v_fname;
+exception
+
+when no_data_found then
+DBMS_OUTPUT.PUT_LINE('erro emp_iid');
+
+return -1;
+end;
+----------------------------------------------------------
+create or replace PROCEDURE add_subject
+(p_id   in number, p_name in VARCHAR, p_price in NUMBER)
+is
+begin
+insert into subjects values (p_id ,p_name ,p_price);
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error in insert');
+        dbms_output.put_line(sqlerrm);
+END;
+----------------------------------------------------------
+create or replace PROCEDURE delete_studant(p_id IN NUMBER)
+AS
+BEGIN
+DELETE  studants 
+
+WHERE St_ID =p_id;
+END;
+----------------------------------------------------------
+create or replace PROCEDURE delete_subject
+(p_id number)
+is
+begin
+delete from subjects where sub_id=p_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error in delete');
+        dbms_output.put_line(sqlerrm);
+END;
+----------------------------------------------------------
+create or replace PROCEDURE Search_studant 
+(p_id in  studants.st_id%TYPE ,
+p_first out studants.first_name%type,
+p_Second out studants.first_name%type ,
+p_address out studants.address%type,
+p_phone_Number out studants.phone_number%type,
+p_General_Avg out studants.general_avg%type,
+p_Gender out  studants.gender%type)
+
+is 
+begin 
+select first_name , second_name,address, phone_number,General_Avg,Gender
+into    p_first   , p_Second  , p_address  ,p_phone_Number,p_General_Avg ,p_Gender
+
+FROM studants 
+where st_id = p_id ;
+
+EXCEPTION 
+when others then 
+DBMS_OUTPUT.PUT_LINE(sqlcode);
+
+end;
+
+----------------------------------------------------------
+
+create or replace PROCEDURE update_pric  
+(p_sub_id in NUMBER , p_new_pric in number )
+is
+begin
+update subjects set course_pric_per_month= p_new_pric
+where sub_id =p_sub_id ;
+EXCEPTION 
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('it is error');
+end;

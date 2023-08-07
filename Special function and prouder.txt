@@ -1,0 +1,182 @@
+ -- نقوم ب ادخال رقم الموظف والناتج يكون الاسم الأول والاسم الاخير و عنوانه والراتب 
+
+      CREATE OR REPLACE PROCEDURE   employeeName_Address 
+       (p_id varchar2)
+       as
+       v_first_name varchar2(30);
+       v_last_name varchar2(30);
+       v_address varchar2(30);
+       v_sal NUMBER;
+BEGIN
+   SELECT first_name, last_name ,address ,salary  INTO v_first_name, v_last_name, v_address ,v_sal 
+   FROM employees
+   WHERE emp_id = p_id;
+   
+   DBMS_OUTPUT.put_line('Employee Name : ' || ' ' || v_first_name || ' ' || v_last_name || '  ' || ' and The address is ' || ' ' ||v_address || ' and The salary  is ' || ' ' ||v_sal );
+  
+END ;
+
+exec employeeName_Address(2);
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--نقوم بادخال رقم الشعبة  ويعرض اليوكم الخاص فيها وتاريخها 
+
+      CREATE OR REPLACE PROCEDURE  Div_time_day
+       (p_id varchar2)
+       as
+       v_div_day varchar2(30);
+       v_div_time date;
+
+      
+BEGIN
+   SELECT div_day , div_time   INTO v_div_day, v_div_time
+   FROM divisions
+   WHERE div_id = p_id;
+   
+   DBMS_OUTPUT.put_line(' The Day is : '  || v_div_day  || '  ' || 'and the time is ' || v_div_time );
+  
+END ;
+
+exec Div_time_day(100);
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- نقوم ب ادخال رقم الطالب ويتم ارجاع اسمه 
+
+create or replace FUNCTION serch_student_first_name 
+(st_iid NUMBER)
+RETURN VARCHAR2
+is 
+v_fname VARCHAR2(30);
+
+begin 
+
+SELECT  FIRST_NAME  into v_fname
+from studants 
+where st_id = st_iid;
+RETURN v_fname;
+exception
+
+when no_data_found then
+DBMS_OUTPUT.PUT_LINE('erro st_iid');
+
+return -1;
+end;
+
+SELECT serch_student_first_name(5) from dual;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- نقوم بادخال رقم الطالب و يعرض معلومات عنه
+      CREATE OR REPLACE PROCEDURE   student_info
+       (p_id varchar2)
+       as
+       v_first_name varchar2(30);
+       v_last_name varchar2(30);
+       v_address varchar2(30);
+       V_avg  NUMBER;
+       v_gender varchar2(30);
+BEGIN
+   SELECT first_name, last_name ,address  ,general_avg ,gender   INTO  v_first_name, v_last_name, v_address ,V_avg ,v_gender
+   FROM studants
+   WHERE st_id = p_id;
+   
+   DBMS_OUTPUT.put_line('Studant Name : ' || ' ' || v_first_name || ' ' || v_last_name || '  ' || ' and The address is ' || ' ' ||v_address || ' and The avarage  is ' || ' ' ||V_avg || '  ' || 'and he/she is :' || v_gender  );
+  
+END ;
+
+exec student_info(4);
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- تعديل معدل الطالب من خلال ادخال رقمو 
+create or replace  PROCEDURE update_avg
+(p_st_id in NUMBER , p_new_avg  in number )
+is
+begin
+update studants  set general_avg = p_new_avg
+where st_id  = p_st_id  ;
+EXCEPTION 
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('it is error');
+end;
+
+exec update_avg(4,99);
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- تعديل راتب الموظف  من خلال ادخال رقمو 
+
+create or replace  PROCEDURE update_salary
+(p_emp_id in NUMBER , p_new_salary  in number )
+is
+begin
+update employees  set salary  = p_new_salary
+where emp_id   = p_emp_id  ;
+EXCEPTION 
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('it is error');
+end;
+
+exec update_salary(4,3000);
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- نقوم بادخال رقم الشعبة يتم ارجاع كم كويز اقيم فيها 
+   create or replace FUNCTION return_number_quize
+(diiv_id  NUMBER)
+RETURN NUMBER
+is 
+v_count_quiz  NUMBER;
+
+begin 
+
+SELECT  count(quiz_id)  into v_count_quiz
+from quizzes  
+where div_id = diiv_id;
+RETURN v_count_quiz;
+exception
+
+when no_data_found then
+DBMS_OUTPUT.PUT_LINE('erro st_iid');
+
+return -1;
+end;
+
+SELECT return_number_quize(100) from dual;
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-يقوم بادخال رقم الشعبة و يعرض طلاب الشعبة
+
+CREATE OR REPLACE PROCEDURE print_students_of_div (
+    p_Div_id IN NUMBER
+) AS
+    v_first_name       VARCHAR2(30);
+  v_Lastname       VARCHAR2(30);
+    p_Addrees  VARCHAR2(100);
+    p_phone_number NUMBER;
+BEGIN
+    SELECT
+        first_name , last_name  ,address ,  phone_number
+        
+    INTO
+        v_first_name,   v_Lastname ,p_Addrees,p_phone_number 
+     from studants natural join divisions_studants
+    
+       where div_id=p_Div_id;
+
+    dbms_output.put_line('First_name: ' || v_first_name);
+    dbms_output.put_line('Last_name : ' || v_Lastname);
+    dbms_output.put_line('Adress : ' || p_Addrees);
+      dbms_output.put_line('phone number  : ' || p_phone_number);
+
+END;
+
+EXECUTE print_students_of_div(103);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
